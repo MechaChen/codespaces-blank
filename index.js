@@ -15,7 +15,6 @@ const React = (function() {
 
     function render(Component) {
         const C = Component();
-        console.log('hooks =>', hooks);
         C.render();
         return C;
     }
