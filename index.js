@@ -14,6 +14,30 @@ const React = (function() {
         return [state, setState];
     }
 
+    function useEffect(cb, depArray) {
+        // NOTE: get old dependecies by idx
+        const oldDeps = hooks[idx];
+
+        // NOTE: by default, cb should be called every time
+        let hasChanged = true;
+
+        // NOTE: if there exists one value in new dependencies not equal to old dependencies
+        if (oldDeps) {
+            hasChanged = depArray.some(
+                (dep, i) => !Object.is(dep, oldDeps[i])
+            )
+        }
+
+        if (hasChanged) {
+            cb();
+        }
+
+        // should call cb
+        // NOTE: store the new dependencies to hooks, and continue to next hook
+        hooks[idx] = depArray;
+        idx += 1
+    }
+
     function render(Component) {
         idx = 0;
         const C = Component();
@@ -21,12 +45,16 @@ const React = (function() {
         return C;
     }
 
-    return { useState, render }
+    return { useState, useEffect, render }
 })();
 
 function Component() {
     const [count, setCount] = React.useState(1);
     const [text, setText] = React.useState('apple');
+
+    React.useEffect(() => {
+        console.log('useEfect by Benson');
+    }, [text]);
 
     return {
         render: () => console.log({ count, text }),
