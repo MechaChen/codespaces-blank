@@ -4,8 +4,9 @@ const React = (function() {
 
     function useState(initVal) {
         const state = hooks[idx] || initVal;
+        const _idx = idx;
         const setState = (newVal) => {
-            hooks[idx] = newVal;
+            hooks[_idx] = newVal;
         }
         
         idx += 1;
@@ -14,6 +15,7 @@ const React = (function() {
     }
 
     function render(Component) {
+        idx = 0;
         const C = Component();
         C.render();
         return C;
